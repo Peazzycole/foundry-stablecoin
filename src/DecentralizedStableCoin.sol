@@ -2,6 +2,8 @@
 
 // This is considered an Exogenous, Decentralized, Anchored (pegged), Crypto Collateralized low volitility coin
 
+// This contract is the token contract for your decentralized stablecoin - it's essentially the "currency" itself. Think of it as creating the actual dollar bills, while the DSCEngine is like the Federal Reserve that manages when those bills get printed or destroyed.
+
 // Layout of Contract:
 // version
 // imports
@@ -36,17 +38,15 @@ import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
  * Value (Relative Stability): Anchored (Pegged to USD)
  * Collateral Type: Crypto
  *
-* This is the contract meant to be owned by DSCEngine. It is a ERC20 token that can be minted and burned by the
-DSCEngine smart contract.
+ * This is the contract meant to be owned by DSCEngine. It is a ERC20 token that can be minted and burned by the
+ * DSCEngine smart contract.
  */
 contract DecentralizedStableCoin is ERC20Burnable, Ownable {
     error DecentralizedStableCoin_MustBeMoreThanZero();
     error DecentralizedStableCoin_BurnAmountExceedsBalance();
     error DecentralizedStableCoin_NotZeroAddress();
 
-    constructor(
-        address originalOwner
-    ) ERC20("DecentralizedStableCoin", "DSC") Ownable(originalOwner) {}
+    constructor(address originalOwner) ERC20("DecentralizedStableCoin", "DSC") Ownable(originalOwner) {}
 
     function burn(uint256 _amount) public override onlyOwner {
         // Only the owner can burn tokens
@@ -63,11 +63,8 @@ contract DecentralizedStableCoin is ERC20Burnable, Ownable {
         super.burn(_amount);
     }
 
-    function mint(
-        address _to,
-        uint256 _amount
-    ) external onlyOwner returns (bool) {
-        if (_to != address(0)) {
+    function mint(address _to, uint256 _amount) external onlyOwner returns (bool) {
+        if (_to == address(0)) {
             revert DecentralizedStableCoin_NotZeroAddress();
         }
 

@@ -21,7 +21,7 @@
 // private
 // view & pure functions
 
-pragma solidity ^0.8.18;
+pragma solidity ^0.8.20;
 
 import {DecentralizedStableCoin} from "./DecentralizedStableCoin.sol";
 import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
@@ -44,7 +44,7 @@ import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/shared/interf
  */
 contract DSCEngine is ReentrancyGuard {
     /*//////////////////////////////////////////////////////////////
-                                Errors
+                            Errors
     //////////////////////////////////////////////////////////////*/
     error DSCEngine_TokenAddressesAndPriceFeedAddressesMustBeSameLength();
     error DSCEngine_TokenNotAllowed();
@@ -54,7 +54,7 @@ contract DSCEngine is ReentrancyGuard {
     error DSCEngine_MintFailed();
 
     /*//////////////////////////////////////////////////////////////
-                                State Variables
+                            State Variables
     //////////////////////////////////////////////////////////////*/
     uint256 private constant ADDITIONAL_FEED_PRECISION = 1e10;
     uint256 private constant PRECISION = 1e18;
@@ -63,9 +63,9 @@ contract DSCEngine is ReentrancyGuard {
     uint256 private constant MIN_HEALTH_FACTOR = 1;
 
     mapping(address token => address priceFeed) private s_priceFeeds;
-    mapping(address user => mapping(address token => uint256 amount)) private s_collateralDeposited;
-    mapping(address user => uint256 amount) private s_dscMinted;
-    address[] private s_collateralTokens;
+    mapping(address user => mapping(address token => uint256 amount)) private s_collateralDeposited; // // Mapping of users to their collateral deposits
+    mapping(address user => uint256 amount) private s_dscMinted; // Mapping of users to the amount of DSC they have minted
+    address[] private s_collateralTokens; // List of collateral tokens accepted by the DSCEngine
 
     DecentralizedStableCoin private immutable i_dsc;
 
